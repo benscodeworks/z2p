@@ -1,0 +1,29 @@
+[package]
+name = "zero-to-production"
+version = "0.1.0"
+edition = "2024"
+
+# TODO: make a follow up ticket that will look into if rust 1.90 will definetely use "lld" as the default linker.
+# TODO: so, that these optimiztions no longer need to be used.
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+
+[target.x86_64-pc-windows-gnu]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+
+# on linux
+# ubuntu, `sudo apt-get install lld clang`
+# arch, `sudo pacman -S lld clang`
+[target.x86_640unknown-linux-gnu]
+rustflags = ["-C", "linker=clang", '-C', "link-arg=-fuse-ld=lld"]
+
+# on macos, `brew install llvm` and follow steps in `brew info llvm`
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "link-arg=-use-ld=lld"]
+
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "link-arg=-fuse-ld=/opt/homebrew/opt/llvm/bin/ld64.lld"]
+
+[dependencies]
+actix-web = "4.11.0"
+tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros"] }
