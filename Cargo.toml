@@ -3,8 +3,6 @@ name = "zero-to-production"
 version = "0.1.0"
 edition = "2024"
 
-# TODO: make a follow up ticket that will look into if rust 1.90 will definetely use "lld" as the default linker.
-# TODO: so, that these optimiztions no longer need to be used.
 [target.x86_64-pc-windows-msvc]
 rustflags = ["-C", "link-arg=-fuse-ld=lld"]
 
@@ -23,6 +21,20 @@ rustflags = ["-C", "link-arg=-use-ld=lld"]
 
 [target.aarch64-apple-darwin]
 rustflags = ["-C", "link-arg=-fuse-ld=/opt/homebrew/opt/llvm/bin/ld64.lld"]
+
+[lib]
+# we could use any path here, but we are following the community convention.
+# we could specify a library name using the `name` field. If unspecified,
+# cargo will default to `package.name` which is what we want.
+path = "src/lib.rs"
+
+# notice the double square brackets: it's an array in toml's syntax.
+# we can only have one library in a project, but we can have multiple binaries!
+# if you want to manage multiple libraries in the same repository
+# have a look at the workspace feature - we'll cover it later on.
+[[bin]]
+path = "src/main.rs"
+name = "z2p"
 
 [dependencies]
 actix-web = "4.11.0"
